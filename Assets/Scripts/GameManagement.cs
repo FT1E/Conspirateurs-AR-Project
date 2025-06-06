@@ -152,15 +152,16 @@ public class GameManagement : MonoBehaviour
 
         // otherwise it's ok
 
-        // TODO - set piece texture and tag of the corresponding player
+        // - set piece texture and tag of the corresponding player
+        Renderer renderer = AM_piece.GetComponentInChildren<Renderer>();
         if (current_turn == 0)
         {
             AM_piece.tag = "player1";
-
+            renderer.material = p1_material;
         }
         else {
             AM_piece.tag = "player2";
-
+            renderer.material = p2_material;
         }
 
         // update game state
@@ -366,13 +367,9 @@ public class GameManagement : MonoBehaviour
         // todo - tweak a little bit
         // some synchronization issues maybe 
 
-        if (Input.touchCount > 0)
+        if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
         { 
-            Touch touch = Input.GetTouch(0);
-            if(touch.phase == TouchPhase.Began)
-            {
-                ConfirmMove();
-            }
+            ConfirmMove();
         }
     }
 }
