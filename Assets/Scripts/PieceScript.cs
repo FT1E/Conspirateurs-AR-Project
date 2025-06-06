@@ -14,6 +14,8 @@ public class PieceScript : MonoBehaviour
     private Vector3 last_position;
     // end physical position variables
 
+    // variable for communication with GameManagement script
+    public GameManagement gameManagement;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -38,9 +40,10 @@ public class PieceScript : MonoBehaviour
 
             // else
             // compare oldX, oldY with newX, newY
-            if (oldX != newX || oldY != newY) { 
-                // TODO
+            if (oldX != newX || oldY != newY) {
+                // if the piece was moved to a different tile/square
                 // - send signal to GameManagement
+                gameManagement.SendAttempt(this);
 
                 // if move is ok, GameManagement will call ConfirmMove()
             }
@@ -87,6 +90,11 @@ public class PieceScript : MonoBehaviour
         oldX = newX = x;
         oldY = newY = y;
     }
+
+    public int getOldX() { return oldX; }
+    public int getOldY() {  return oldY; }
+    public int getNewX() {  return newX; }
+    public int getNewY() {  return newY; }
 
     // Update is called once per frame
     void Update()
