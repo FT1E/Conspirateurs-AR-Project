@@ -36,7 +36,7 @@ public class GameManagement : MonoBehaviour
 
     // 1 - with a piece
     // for attempted move (AM)
-    private PieceScript AM_piece;
+    private PieceScript AM_piece = null;
     private int AM_oldX, AM_oldY;
     private int AM_newX, AM_newY;
 
@@ -80,15 +80,14 @@ public class GameManagement : MonoBehaviour
                 StartCoroutine("FlashGreen");
                 // - drops++
                 drops++;
-                // - reset AM variables
-                Reset_AM_Variables();
             }
             else 
             {
                 // if not - flash screen red and continue
                 StartCoroutine("FlashRed");
             }
-
+            // - reset AM variables
+            Reset_AM_Variables();
         }
         // end drop phase
 
@@ -106,7 +105,7 @@ public class GameManagement : MonoBehaviour
             {
                 // if not - flash screen yellow and continue
                 StartCoroutine("FlashYellow");
-                
+
                 continue;
             }
 
@@ -117,8 +116,6 @@ public class GameManagement : MonoBehaviour
                 // - flash screen green
                 StartCoroutine("FlashGreen");
 
-                // - reset AM variables
-                Reset_AM_Variables();
             }
             else 
             {
@@ -126,13 +123,18 @@ public class GameManagement : MonoBehaviour
                 // - flash screen red
                 StartCoroutine("FlashRed");
 
-                // continue
-                continue;
             }
             
+            // - reset AM variables
+            Reset_AM_Variables();
 
         }
         // end move phase
+
+
+        // congrats screen
+        StartCoroutine("FlashGreen");
+        screen_text.text = $"Congrats! Player {(current_turn + 1) % 2 + 1} won!";
     }
     // end Game Loop coroutine
 
@@ -198,6 +200,20 @@ public class GameManagement : MonoBehaviour
             // board
             board[AM_oldX, AM_oldY] = -1;
             board[AM_newX, AM_newY] = current_turn;
+
+            // see if old or new position is a finishing tile
+
+            if (BoardGenerator.IsFinishTile(AM_oldX, AM_oldY)) 
+            {
+                if (current_turn == 0) p1_finished_pieces--;
+                else p2_finished_pieces--;
+            }
+
+            if (BoardGenerator.IsFinishTile(AM_newX, AM_newY))
+            {
+                if (current_turn == 0) p1_finished_pieces++;
+                else p2_finished_pieces++;
+            }
 
             // turn
             AdvanceTurn();
@@ -281,7 +297,7 @@ public class GameManagement : MonoBehaviour
         color.b = 0f;
         color.a = 0.5f;
         screen_image.color = color;
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1f);
         color.a = 0f;
         screen_image.color = color;
     }
@@ -296,7 +312,7 @@ public class GameManagement : MonoBehaviour
         color.b = 0f;
         color.a = 0.5f;
         screen_image.color = color;
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1f);
         color.a = 0f;
         screen_image.color = color;
     }
@@ -311,7 +327,7 @@ public class GameManagement : MonoBehaviour
         color.b = 0f;
         color.a = 0.5f;
         screen_image.color = color;
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1f);
         color.a = 0f;
         screen_image.color = color;
     }
